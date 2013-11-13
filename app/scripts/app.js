@@ -4,14 +4,12 @@ angular.module('hotreminderApp', [
     'hotreminderApp.services.notification',
     'hotreminderApp.services.db',
     'hotreminderApp.filters.filterStateBy',
+    'hotreminderApp.directives.subject',
+    'hotreminderApp.directives.focusOn',
     'google'
     ])
-  .config(function ($routeProvider) {
+  .config(['$routeProvider', function ($routeProvider) { // or directly config(function ($routeProvider) {
     $routeProvider
-      .when('/', {
-        templateUrl: 'views/login.html',
-        controller: 'LoginCtrl'
-      })
       .when('/main', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
@@ -20,7 +18,15 @@ angular.module('hotreminderApp', [
         templateUrl: 'views/notification_test.html',
         controller: 'NotificationTestCtrl'
       })
+      .when('/about', {
+        templateUrl: 'views/about.html',
+        controller: 'AboutCtrl'
+      })
+      .when('/:params', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+      })
       .otherwise({
-        redirectTo: '/'
+        redirectTo: '/main'
       });
-  });
+  }]);

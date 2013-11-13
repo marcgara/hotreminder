@@ -12,6 +12,7 @@ var mountFolder = function (connect, dir) {
 // use this if you want to recursively match all subfolders:
 // 'test/spec/**/*.js'
 
+
 module.exports = function (grunt) {
   require('load-grunt-tasks')(grunt);
   require('time-grunt')(grunt);
@@ -19,7 +20,7 @@ module.exports = function (grunt) {
   // configurable paths
   var yeomanConfig = {
     app: 'app',
-    dist: 'dist'
+    dist: '../hotreminder_dist'
   };
 
   try {
@@ -113,7 +114,8 @@ module.exports = function (grunt) {
           src: [
             '.tmp',
             '<%= yeoman.dist %>/*',
-            '!<%= yeoman.dist %>/.git*'
+            '!<%= yeoman.dist %>/.git*',
+            '!<%= yeoman.dist %>/.nojekyll'
           ]
         }]
       },
@@ -154,7 +156,7 @@ module.exports = function (grunt) {
     },
     // not used since Uglify task does concat,
     // but still available if needed
-    /*concat: {
+/*    concat: {
       dist: {}
     },*/
     rev: {
@@ -163,7 +165,7 @@ module.exports = function (grunt) {
           src: [
             '<%= yeoman.dist %>/scripts/{,*/}*.js',
             '<%= yeoman.dist %>/styles/{,*/}*.css',
-            '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+            //'<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
             '<%= yeoman.dist %>/styles/fonts/*'
           ]
         }
@@ -247,8 +249,14 @@ module.exports = function (grunt) {
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
-            'bower_components/**/*',
-            'images/{,*/}*.{gif,webp}',
+            'bower_components/angular/*',
+            'bower_components/angular-cookies/*',
+            'bower_components/angular-resource/*',
+            'bower_components/angular-cookies/*',
+            'bower_components/angular-sanitize/*',
+            'bower_components/bootstrap/dist/**/*',
+            'bower_components/jquery/*',
+            'images/{,*/}*.{png,gif,webp}',
             'styles/fonts/*'
           ]
         }, {
@@ -265,6 +273,18 @@ module.exports = function (grunt) {
         cwd: '<%= yeoman.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      },
+      dev_env: {
+        //expand: true,
+        cwd: '.',
+        src: 'env/dev.js',
+        dest: '<%= yeoman.app %>/scripts/env.js'
+      },
+      dev_prod: {
+        //expand: true,
+        cwd: '.',
+        src: 'env/prod.js',
+        dest: '<%= yeoman.app %>/scripts/env.js'
       }
     },
     concurrent: {
@@ -323,6 +343,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'copy:dev_env',
       'concurrent:server',
       'autoprefixer',
       'connect:livereload',
@@ -333,6 +354,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
+    'copy:dev_env',
     'concurrent:test',
     'autoprefixer',
     'connect:test',
@@ -341,6 +363,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'copy:dev_prod',
     'useminPrepare',
     'concurrent:dist',
     'autoprefixer',

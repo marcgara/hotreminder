@@ -5,9 +5,20 @@ angular.module('hotreminderApp')
 
     Google.login(function(){
       $rootScope.$apply(function(){
-        Db.setUser(Google.getUser());
+        var u = Google.getUser();
+        //console.log(u);
+        $rootScope.user = u;
+        Db.setUser(u);
         $location.path('/main');
       });
     });
+
+    $rootScope.logout = function() {
+      Google.logout();
+      $rootScope.user = null;
+      $location.path('/');
+      return;
+    }
+
 
   });
